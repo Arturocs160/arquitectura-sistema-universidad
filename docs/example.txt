@@ -9,3 +9,5 @@
 - Se hace uso de replica sets, en donde solo se escribe en un nodo primario (Primary) y apartir de ese se hace una replica automatica 
   de datos en 2 o más (Secondary). 
 - Si el Primary cae, alguno de los Secondary toma su lugar, distribuyendo la carga en las réplicas mejorando el rendimiento. 
+- MongoDB sharded permite distribuir grandes volúmenes de datos entre múltiples nodos.
+- Docker Compose facilita el despliegue local y automatizado del entorno. El servicio mongo-setup reduce la intervención manual en la configuración inicial.
