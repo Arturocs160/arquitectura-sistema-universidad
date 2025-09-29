@@ -1,5 +1,5 @@
 .env
-
+node_modules
 # Dependencies services
 src/auth-service/node_modules
 src/documents-service/node_modules
