@@ -1,6 +1,6 @@
 import { Express } from "express";
-import routerAuth from '../controllers/auth-controller'
+import routerAuth from '../controllers/auth-controller';
 
 export function routes (app: Express){
-    app.use('/', routerAuth)
+    app.use('/auth', routerAuth);
 }
