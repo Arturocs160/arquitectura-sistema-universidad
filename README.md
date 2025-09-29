@@ -22,10 +22,6 @@ docker-compose up --build
 ```
 
 Esto levantará todos los servicios definidos en `docker-compose.yml`:
-- El API Gateway en el puerto 80
-- El servicio de autenticación en el puerto 8010
-- El servicio de documentos en el puerto 8011
-- La aplicación frontend
 
 Puedes acceder a la aplicación web desde tu navegador en `http://localhost:3000`.
 
@@ -42,5 +38,17 @@ project-root/
 └── README.md
 ```
 
----
-Desarrollado para fines educativos.
+ ## Endpoints disponibles
+
+ ### Autenticación
+- `POST /auth/login` — Iniciar sesión
+- `POST /auth/register` — Registrar usuario
+
+ ### Documentos
+- `POST /documents/` — Subir documento
+
+ ### Validación de token
+- `GET /validate` — Validar el token JWT (usado internamente por Nginx)
+
+ ---
+ Desarrollado para fines educativos.
