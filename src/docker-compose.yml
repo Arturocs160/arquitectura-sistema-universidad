@@ -1,56 +1,70 @@
 version: "3.9"
 
 services:
-  mongo1:
-    image: mongo
-    container_name: mongo1
+  # ---------------- CONFIG SERVER ----------------
+  configsvr:
+    image: mongo:6
+    container_name: configsvr
+    command: ["mongod", "--configsvr", "--replSet", "configReplSet", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./data/config:/data/db
+    networks:
+      - mongo-net
+
+  # ---------------- SHARD 1 ----------------
+  shard1:
+    image: mongo:6
+    container_name: shard1
+    command: ["mongod", "--shardsvr", "--replSet", "shard1ReplSet", "--port", "27017", "--bind_ip_all"]
+    volumes:
+      - ./data/shard1:/data/db
+    networks:
+      - mongo-net
+
+  # ---------------- ROUTER (mongos) ----------------
+  mongos:
+    image: mongo:6
+    container_name: mongos
+    depends_on:
+      - configsvr
+      - shard1
+    command: >
+      mongos --configdb configReplSet/configsvr:27017
+             --bind_ip_all --port 27017
     ports:
       - "27017:27017"
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     networks:
       - mongo-net
 
-  mongo2:
-    image: mongo
-    container_name: mongo2
-    ports:
-      - "27018:27017"
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
-    networks:
-      - mongo-net
-
-  mongo3:
-    image: mongo
-    container_name: mongo3
-    ports:
-      - "27019:27017"
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
-    networks:
-      - mongo-net
-
+  # ---------------- SETUP ----------------
   mongo-setup:
-    image: mongo
+    image: mongo:6
     container_name: mongo-setup
     depends_on:
-      - mongo1
-      - mongo2
-      - mongo3
+      - configsvr
+      - shard1
+      - mongos
     networks:
       - mongo-net
-    restart: "on-failure"
     entrypoint: >
       bash -c "
       sleep 5 &&
-      mongosh --host mongo1:27017 --eval '
+      mongosh --host configsvr:27017 --eval '
         rs.initiate({
-          _id: \"rs0\",
-          members: [
-            { _id: 0, host: \"mongo1:27017\" },
-            { _id: 1, host: \"mongo2:27017\" },
-            { _id: 2, host: \"mongo3:27017\" }
-          ]
+          _id: \"configReplSet\",
+          configsvr: true,
+          members: [{ _id: 0, host: \"configsvr:27017\" }]
         })
-      ' || true
+      ' &&
+      mongosh --host shard1:27017 --eval '
+        rs.initiate({
+          _id: \"shard1ReplSet\",
+          members: [{ _id: 0, host: \"shard1:27017\" }]
+        })
+      ' &&
+      mongosh --host mongos:27017 --eval '
+        sh.addShard(\"shard1ReplSet/shard1:27017\");
+      '
       "
 
 networks:
