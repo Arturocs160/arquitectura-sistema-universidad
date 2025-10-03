@@ -2,10 +2,22 @@ import { generateToken } from "../utils/jwt";
 import { connect } from "../../db/db";
 import brcrypt from 'bcrypt';
 
-class AuthService {
-  
+export interface LoginResponse {
+  email?: string;
+  token?: string;
+  error: boolean;
+}
 
-  async login(user: { email: string; password: string;}): Promise<{ email: string; token: string }> {
+export interface ExistingUser {
+  _id: string,
+  email: string,
+  password: string,
+  role: string
+}
+
+class AuthService {
+
+  async login(user: { email: string; password: string;}) : Promise<LoginResponse> {
     
     const db = await connect();
     const usersCollection = db.collection('users');
@@ -15,12 +27,18 @@ class AuthService {
         throw new Error('Usuario no encontrado');
     }
 
-    const token = generateToken({ email: user.email, password: user.password, role: existingUser?.role });
+    const comparePasswords = await brcrypt.compare(user.password, existingUser.password) 
 
-    return { email: user.email, token };
+    if (!comparePasswords) {
+      return { error: true };
+    }
+    
+    const token = generateToken({ email: existingUser.email, password: user.password, role: existingUser.role });
+
+    return { email: user.email, token, error: false };
   }
 
-  async createUser(user: { email: string; password: string; role: string }): Promise<void> {
+  async createUser(user: { email: string; password: string; role: string }) {
     const db = await connect();
     const usersCollection = db.collection('users');
 
@@ -34,7 +52,8 @@ class AuthService {
     }
 
     try {
-        await usersCollection.insertOne(user);
+        const insertUser = await usersCollection.insertOne({ email: user.email, password: user.password, role: user.role });
+        return insertUser;
     } catch (error){
         throw new Error('Error al crear el usuario');
     }
