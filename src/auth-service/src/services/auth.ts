@@ -3,17 +3,20 @@ import { connect } from "../../db/db";
 import brcrypt from 'bcrypt';
 
 class AuthService {
+  
 
   async login(user: { email: string; password: string;}): Promise<{ email: string; token: string }> {
     
     const db = await connect();
     const usersCollection = db.collection('users');
-    const existingUser = await usersCollection.findOne({ email: user.email, password: user.password });
-
-    const token = generateToken({ email: user.email, password: user.password, role: existingUser?.role });
+    const existingUser = await usersCollection.findOne({ email: user.email });
+    
     if (!existingUser) {
         throw new Error('Usuario no encontrado');
     }
+
+    const token = generateToken({ email: user.email, password: user.password, role: existingUser?.role });
+
     return { email: user.email, token };
   }
 
@@ -36,7 +39,6 @@ class AuthService {
         throw new Error('Error al crear el usuario');
     }
   }
-
   
 }
 
