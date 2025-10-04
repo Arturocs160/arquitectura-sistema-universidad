@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import "./styles.css";
-import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Inicio() {
   const [email, setEmail] = useState("");
@@ -9,7 +8,7 @@ export default function Inicio() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -22,8 +21,12 @@ export default function Inicio() {
       const { result } = response.data;
 
       navigate("/entrega");
-    } catch (error) {
-      throw new Error("Error ");
+    } catch (err: any) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Error al iniciar sesión");
+      } else {
+        setError("Error desconocido al iniciar sesión");
+      }
     }
   };
 
@@ -38,6 +41,7 @@ export default function Inicio() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="input"
           />
         </div>
         <div>
@@ -47,11 +51,17 @@ export default function Inicio() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="input"
           />
         </div>
+
         {error && <p className="error">{error}</p>}
-        <button type="submit">Inicia sesión</button>
+
+        <button className="button" type="submit">
+          Inicia sesión
+        </button>
       </form>
+
       <div>
         <Link to="/registro">Si aún no tienes cuenta, regístrate</Link>
       </div>

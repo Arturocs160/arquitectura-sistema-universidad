@@ -22,11 +22,26 @@ export default function Entrega() {
       <h1>Entrega de documentos</h1>
 
       <div className="basic">
-        <h4>Documento 1: Sube un documento</h4>
+        <h4>Documento 1: Sube orden de cobro</h4>
         <input
           type="file"
           onChange={handleFileChange}
           accept=".pdf,.doc,.docx,.png,.jpg"
+          className="docs"
+        />
+        <h4>Documento 1: Sube recibo de pago</h4>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          accept=".pdf,.doc,.docx,.png,.jpg"
+          className="docs"
+        />
+        <h4>Documento 1: Sube boleta del cuatrimestre pasado</h4>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          accept=".pdf,.doc,.docx,.png,.jpg"
+          className="docs"
         />
         <button onClick={handleUpload}>Subir documento</button>
       </div>
