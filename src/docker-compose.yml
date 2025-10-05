@@ -71,9 +71,3 @@ networks:
   mongo-net:
     driver: bridge
 
-upload-service:
-  build: ./src/upload-service
-  ports:
-    - "4002:4002"
-  environment:
-    - JWT_SECRET=tu_clave_secreta
