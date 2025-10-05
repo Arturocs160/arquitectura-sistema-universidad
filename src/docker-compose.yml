@@ -1,72 +1,29 @@
-version: "3.9"
-
+version: '3.9'
 services:
-  # ---------------- CONFIG SERVER ----------------
-  configsvr:
-    image: mongo:6
-    container_name: configsvr
-    command: ["mongod", "--configsvr", "--replSet", "configReplSet", "--port", "27017", "--bind_ip_all"]
-    volumes:
-      - ./data/config:/data/db
-    networks:
-      - mongo-net
 
-  # ---------------- SHARD 1 ----------------
-  shard1:
-    image: mongo:6
-    container_name: shard1
-    command: ["mongod", "--shardsvr", "--replSet", "shard1ReplSet", "--port", "27017", "--bind_ip_all"]
-    volumes:
-      - ./data/shard1:/data/db
+  auth-service:
+    build: ./auth-service
+    ports: 
+      - "8010:8010"
     networks:
-      - mongo-net
+      - microservices-net
 
-  # ---------------- ROUTER (mongos) ----------------
-  mongos:
-    image: mongo:6
-    container_name: mongos
-    depends_on:
-      - configsvr
-      - shard1
-    command: >
-      mongos --configdb configReplSet/configsvr:27017
-             --bind_ip_all --port 27017
+  api-gateway:
+    build: ./api-gateway
+    networks:
+      - microservices-net
     ports:
-      - "27017:27017"
-    networks:
-      - mongo-net
+      - "80:80"
 
-  # ---------------- SETUP ----------------
-  mongo-setup:
-    image: mongo:6
-    container_name: mongo-setup
-    depends_on:
-      - configsvr
-      - shard1
-      - mongos
+  documents-service:
+    build: ./src/documents-service
+    ports: 
+      - "8011:8011"
     networks:
-      - mongo-net
-    entrypoint: >
-      bash -c "
-      sleep 5 &&
-      mongosh --host configsvr:27017 --eval '
-        rs.initiate({
-          _id: \"configReplSet\",
-          configsvr: true,
-          members: [{ _id: 0, host: \"configsvr:27017\" }]
-        })
-      ' &&
-      mongosh --host shard1:27017 --eval '
-        rs.initiate({
-          _id: \"shard1ReplSet\",
-          members: [{ _id: 0, host: \"shard1:27017\" }]
-        })
-      ' &&
-      mongosh --host mongos:27017 --eval '
-        sh.addShard(\"shard1ReplSet/shard1:27017\");
-      '
-      "
+      - microservices-net
+
 
 networks:
-  mongo-net:
+  microservices-net:
     driver: bridge
+
