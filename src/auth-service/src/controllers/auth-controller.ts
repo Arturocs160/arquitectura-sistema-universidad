@@ -14,6 +14,11 @@ routerAuth.post("/login", async (request: Request, response: Response) => {
       .json({ message: "Email y contraseña son requeridos" });
   }
   const result = await authService.login({ email, password });
+
+  if (result.error) {
+    return response.status(401).json({ message: "Credenciales inválidas" });
+  }
+
   return response.json({ result });
 });
 
