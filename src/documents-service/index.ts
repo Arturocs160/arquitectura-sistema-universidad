@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use('/documents', uploadRoutes);
 
-const PORT = process.env.PORT || 4002;
+const PORT = process.env.PORT || 8011;
 app.listen(PORT, () => {
   console.log(`📄 Documents service running on port ${PORT}`);
 });
