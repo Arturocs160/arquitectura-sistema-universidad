@@ -43,4 +43,17 @@ routerAuth.get("/validate-token", validateToken, (request: Request, response: Re
   return response.status(200).json({ message: "Token válido" });
 });
 
+routerAuth.post("/logout", async (request: Request, response: Response) => {
+  const token = request.headers["authorization"].split(" ")[1];
+  console.log('Token recibido para logout:', token);
+
+  const result = await authService.logout(token as string);
+
+  if (result.success) {
+    return response.status(200).json({ message: 'Sesión cerrada exitosamente' });
+  } else {
+    return response.status(400).json({ error: 'Error al cerrar sesión' });
+  }
+});
+
 export default routerAuth;
