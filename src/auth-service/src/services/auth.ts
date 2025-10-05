@@ -32,8 +32,8 @@ class AuthService {
     if (!comparePasswords) {
       return { error: true };
     }
-    
-    const token = generateToken({ email: existingUser.email, password: user.password, role: existingUser.role });
+
+    const token = generateToken({ _id: existingUser._id, email: existingUser.email, role: existingUser.role, timestamp: Date.now() });
 
     return { email: user.email, token, error: false };
   }
@@ -59,6 +59,15 @@ class AuthService {
     }
   }
   
+  async logout(token: string): Promise<{ success: boolean }> {
+    const db = await connect();
+    const revokedCollection = db.collection('revokedTokens');
+
+    await revokedCollection.insertOne({ token, revokedAt: new Date() });
+
+    return { success: true };
+  }
+
 }
 
 
