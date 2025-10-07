@@ -1,35 +1,13 @@
-import axios from "axios";
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function Inicio() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email,
-        password,
-      });
-
-      const { result } = response.data;
-
-      navigate("/entrega");
-    } catch (err: any) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Error al iniciar sesión");
-      } else {
-        setError("Error desconocido al iniciar sesión");
-      }
-    }
-  };
-
+export default function Inicio({
+  handleLogin,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  error,
+}: any) {
   return (
     <div className="registro">
       <h1>Inicia sesión</h1>

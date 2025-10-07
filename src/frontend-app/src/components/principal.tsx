@@ -1,4 +1,3 @@
-import React from "react";
 import "./styles.css";
 import img1 from "../assets/img/img1.png";
 export default function Principal() {
