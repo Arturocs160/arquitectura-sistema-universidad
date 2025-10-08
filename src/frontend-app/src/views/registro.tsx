@@ -1,18 +1,27 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Registro({
   handleRegister,
-  email,
-  setEmail,
-  password,
-  setPassword,
+
   error,
   success,
 }: any) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const result = await handleRegister({ email, password });
+    if (result) {
+      setTimeout(() => navigate("/estudiante"), 1500);
+    }
+  };
   return (
     <div className="registro">
       <h1>Regístrate</h1>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleSubmit}>
         <div>
           <h3>Correo electrónico institucional</h3>
           <input

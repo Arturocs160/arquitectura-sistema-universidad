@@ -3,11 +3,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import Principal from "./components/principal";
+import Principal from "./views/principal";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Inicio from "./components/inicio";
-import Registro from "./components/registro";
-import Entrega from "./components/entrega";
+import Inicio from "./views/inicio";
+import Registro from "./views/registro";
+import Entrega from "./views/entrega";
 
 function App() {
   return (
