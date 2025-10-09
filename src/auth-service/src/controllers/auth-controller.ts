@@ -1,4 +1,4 @@
-import { connect } from "@db/db";
+import { validateToken } from "../utils/middleware/validateToken";
 import { AuthService } from "../services/auth";
 import { Router, Request, Response } from "express";
 
@@ -8,50 +8,52 @@ const routerAuth = Router();
 
 routerAuth.post("/login", async (request: Request, response: Response) => {
   const { email, password } = request.body;
-  if (!email || !password) {
-    return response
-      .status(400)
-      .json({ message: "Email y contraseña son requeridos" });
-  }
-  const result = await authService.login({ email, password });
 
+  if (!email || !password) {
+    return response.status(400).json({ message: "Email y contraseña son requeridos" });
+  }
+
+  const result = await authService.login({ email, password });
+  
   if (result.error) {
     return response.status(401).json({ message: "Credenciales inválidas" });
   }
-
+  
   return response.json({ result });
 });
 
-routerAuth.post(
-  "/create-user",
-  async (request: Request, response: Response) => {
-    const db = await connect();
-
-    const usersCollection = db.collection("users");
-    const { email, password } = request.body;
-    const insertUser = await usersCollection.insertOne({
-      email: email,
-      password: password,
-    });
-    response.send(insertUser);
+routerAuth.post("/create-user", async (request: Request, response: Response) => {
+  const { email, password } = request.body;
 
     if (!email || !password) {
-      return response
-        .status(400)
-        .json({ message: "Email y password son requeridos" });
+      return response.status(400).json({ message: "Email y password son requeridos" });
     }
+
     try {
-      await authService.createUser({ email, password, role: "user" });
-      return response
-        .status(201)
-        .json({ message: "Usuario creado exitosamente" });
+      await authService.createUser({ email, password, role: "alumno" });
+      return response.status(201).json({ message: "Usuario creado exitosamente" });
     } catch (error) {
       console.error("Error al crear el usuario:", error);
-      return response
-        .status(500)
-        .json({ message: "Error al crear el usuario" });
+      return response.status(500).json({ message: "Error al crear el usuario" });
     }
   }
 );
+
+routerAuth.get("/validate-token", validateToken, (request: Request, response: Response) => {
+  return response.status(200).json({ message: "Token válido" });
+});
+
+routerAuth.post("/logout", async (request: Request, response: Response) => {
+  const token = request.headers["authorization"].split(" ")[1];
+  console.log('Token recibido para logout:', token);
+
+  const result = await authService.logout(token as string);
+
+  if (result.success) {
+    return response.status(200).json({ message: 'Sesión cerrada exitosamente' });
+  } else {
+    return response.status(400).json({ error: 'Error al cerrar sesión' });
+  }
+});
 
 export default routerAuth;

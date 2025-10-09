@@ -1,11 +1,14 @@
 import jwt, { Secret } from 'jsonwebtoken';
+import 'dotenv/config'
+import { ObjectId } from 'mongodb';
 
 const SECRET_KEY: Secret = process.env.JWT_SECRET!;
 
 export interface TokenPayload {
+  _id: ObjectId;
   email: string;
-  password: string;
   role?: string;
+  timestamp?: number;
 }
 
 export function generateToken(payload: TokenPayload, expiresIn = 3600): string {
