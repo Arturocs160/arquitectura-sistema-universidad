@@ -93,3 +93,76 @@ Posibles opciones:
 Decisión: Se ópto por la implementación de react.
 
 Justificación: ya que al ser un sistema no muy grande, react sirve perfectamente para la conexión de interfaces a un backend utilizandos axios, además de llevar un manejo simple y tener el control sobre el enrutamiento y estados.
+
+# ADR 06: Factory Method
+
+Problema:
+Era necesario crear diferentes instancias de servicios para manejar solicitudes HTTP (autenticación, subida de archivos, registro, etc.) sin acoplar directamente los endpoints al código del frontend.
+
+Posibles opciones:
+
+- Crear instancias de Axios directamente en cada componente.
+- Usar un único archivo de configuración con condicionales para cada tipo de servicio.
+- Implementar un patrón Factory Method para centralizar la creación de instancias según el tipo de servicio requerido.
+
+Decisión:
+Se implementó el Factory Method mediante la función factoryMethod("auth/upload") en el archivo factoryMethod.ts.
+
+Justificación:
+El patrón Factory Method permite crear objetos de manera flexible y desacoplar el código del tipo de instancia que necesita. Así, si se requiere otro servicio, se puede generar fácilmente sin modificar el resto del sistema. Esto favorece la escalabilidad y mantenibilidad del código.
+
+# ADR 07: Decorator
+
+Problema:
+Se necesitaba añadir funcionalidad adicional a ciertos componentes visuales sin modificar directamente su código base.
+
+Posibles opciones:
+
+- Usar condicionales dentro del mismo componente para añadir estilos o funciones extra.
+  -Implementar un patrón Decorator que permita “envolver” un componente base con características adicionales.
+
+Decisión:
+Se implementó el patrón Decorator en el archivo decorate.tsx, envolviendo componentes como Entrega para agregar funcionalidad visual o lógica adicional.
+
+Justificación:
+El patrón Decorator permitió extender el comportamiento de los componentes de forma dinámica, sin alterar el código original. Esto mantiene el principio Open/Closed (abierto a extensión, cerrado a modificación) y favorece la reutilización de componentes en diferentes contextos visuales o funcionales.
+
+# ADR 08: Observer
+
+Problema:
+Era necesario mantener la sincronización de estados entre distintos componentes, por ejemplo, notificar cambios en la sesión de usuario al resto del sistema (login/logout).
+
+Posibles opciones:
+
+- Pasar props manualmente a cada componente
+- Usar estados locales y propagar cambios mediante eventos personalizados.
+- Implementar un Context con un patrón Observer para reaccionar automáticamente a los cambios.
+
+Decisión:
+Se implementó el patrón Observer en authContext.tsx mediante el uso de React Context y useAuth(), donde los componentes observan los cambios del estado global de autenticación.
+
+Justificación:
+El patrón Observer permite que los componentes suscritos se actualicen automáticamente cuando cambia el estado global del usuario. Esto simplifica la gestión de la sesión, evita la duplicación de lógica y mejora la coherencia de la interfaz ante eventos de login/logout.
+
+# ADR 09: MVVM (MODEL VIEW VIEWMODEL)
+
+Problema:
+El proyecto requería separar la lógica de negocio (manejo de datos y validaciones) de la interfaz de usuario (componentes visuales), para mantener un código limpio y escalable.
+
+Posibles opciones:
+
+- Manejar toda la lógica dentro de los componentes de las vistas.
+- Dividir el código de forma manual sin una estructura clara.
+- Implementar el patrón MVVM para establecer capas definidas entre modelo, vista y lógica de presentación.
+
+Decisión:
+Se aplicó MVVM en la estructura de carpetas:
+
+Model: userModel.ts
+
+ViewModels: inicioContainer.tsx, entregaContainer.tsx, etc.
+
+Views: inicio.tsx, entrega.tsx, registro.tsx, etc.
+
+Justificación:
+El patrón MVVM permitió separar la lógica de negocio (ViewModel) de la presentación (View), logrando un código más modular, reutilizable y fácil de mantener. Las vistas se enfocan únicamente en mostrar datos, mientras que los ViewModels gestionan la lógica de interacción y los modelos contienen la estructura de datos.
