@@ -1,36 +1,22 @@
-import React, { useState } from "react";
-import "./styles.css";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import inicioContainer from "../viewmodels/inicioContainer";
 
-export default function Inicio() {
+function Inicio({ handleLogin, error }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email,
-        password,
-      });
-
-      const { result } = response.data;
-
-      navigate("/entrega");
-    } catch (error) {
-      throw new Error("Error ");
-    }
+    const result = await handleLogin({ email, password });
+    if (result) navigate("/entrega");
   };
 
   return (
     <div className="registro">
       <h1>Inicia sesión</h1>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <div>
           <h3>Correo electrónico institucional</h3>
           <input
@@ -38,6 +24,7 @@ export default function Inicio() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="input"
           />
         </div>
         <div>
@@ -47,14 +34,23 @@ export default function Inicio() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="input"
           />
         </div>
+
         {error && <p className="error">{error}</p>}
-        <button type="submit">Inicia sesión</button>
+
+        <button className="button" type="submit">
+          Inicia sesión
+        </button>
       </form>
+
       <div>
         <Link to="/registro">Si aún no tienes cuenta, regístrate</Link>
       </div>
     </div>
   );
 }
+
+
+export default inicioContainer(Inicio);

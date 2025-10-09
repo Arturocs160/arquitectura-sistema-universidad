@@ -1,38 +1,28 @@
-import React, { useState } from "react";
-import "./styles.css";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import registroContainer from "../viewmodels/registroContainer";
 
-export default function Registro() {
+function Registro({
+  handleRegister,
+
+  error,
+  success,
+}: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    try {
-      const response = await axios.post("http://localhost:3000/create-user", {
-        email,
-        password,
-      });
-
-      setSuccess(response.data.message || "Registro exitoso");
-      // Redirigir después de unos segundos
-      setTimeout(() => navigate("/entrega"), 1500);
-    } catch (err) {
-      throw new Error("Error");
+    const result = await handleRegister({ email, password });
+    if (result) {
+      setTimeout(() => navigate("/estudiante"), 1500);
     }
   };
-
   return (
     <div className="registro">
       <h1>Regístrate</h1>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleSubmit}>
         <div>
           <h3>Correo electrónico institucional</h3>
           <input
@@ -40,6 +30,7 @@ export default function Registro() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="input"
           />
         </div>
         <div>
@@ -49,15 +40,23 @@ export default function Registro() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="input"
           />
         </div>
+
         {error && <p className="error">{error}</p>}
         {success && <p className="success">{success}</p>}
-        <button type="submit">Crear cuenta</button>
+
+        <button type="submit" className="button">
+          Crear cuenta
+        </button>
       </form>
+
       <div>
         <Link to="/estudiante">¿Ya tienes cuenta? Inicia sesión</Link>
       </div>
     </div>
   );
 }
+
+export default registroContainer(Registro);

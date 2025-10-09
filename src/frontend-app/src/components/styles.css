@@ -228,3 +228,20 @@ display: flex;
     align-items: center;
     justify-content: center;
 }
+
+.input{
+    width: 300px;
+    height: 30px;
+}
+
+.button{
+    width: 150px;
+    height: 30px;
+    align-items: center;
+    margin-top: 15px;
+    margin-left:75px ;
+}
+
+.docs{
+    margin: 15px;
+}
