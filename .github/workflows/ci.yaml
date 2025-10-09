@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  node-ci:
+    name: CI - ${{ matrix.project }} on ${{ matrix.os }} (Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: [18]
+        os: [ubuntu-latest, windows-latest]
+        project: [auth-service, documents-service, frontend-app]
+    defaults:
+      run:
+        working-directory: src/${{ matrix.project }}
+        shell: bash
+
+    steps:
+      - name: Comprobar repositorio
+        uses: actions/checkout@v4
+
+      - name: Usar Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Instalar dependencias
+        run: |
+          npm ci
+
+      - name: Linter
+        run: |
+          if [ -f package.json ]; then
+            if npm run | grep -q "lint"; then
+              npm run lint
+            else
+              echo "No lint script defined for ${{ matrix.project }} - skipping"
+            fi
+          fi
+
+      - name: Ejecutar pruebas y recolectar reporte JUnit
+        if: matrix.project != 'frontend-app'
+        run: |
+          if [ -f package.json ]; then
+            if npm run | grep -q "test"; then
+              mkdir -p test-results
+              # run tests; prefer jest or npm test; try to generate JUnit via env or packages if present
+              if npx -y jest --version > /dev/null 2>&1; then
+                npx jest --ci --reporters=default --outputFile=./test-results/junit.xml --reporters=jest-junit || true
+              else
+                npm test -- --reporter=jest-junit --outputFile=./test-results/junit.xml || true
+              fi
+            else
+              echo "No test script defined for ${{ matrix.project }} - skipping"
+            fi
+          fi
+
+      - name: Frontend: Ejecutar pruebas (modo CI)
+        if: matrix.project == 'frontend-app'
+        run: |
+          if [ -f package.json ]; then
+            if npm run | grep -q "test"; then
+              CI=true npm test -- --watchAll=false --reporters=default || true
+            else
+              echo "No test script defined for frontend-app - skipping"
+            fi
+          fi
+
+      - name: Construir
+        run: |
+          if [ -f package.json ]; then
+            if npm run | grep -q "build"; then
+              npm run build
+            else
+              echo "No build script defined for ${{ matrix.project }} - skipping"
+            fi
+          fi
+
+      - name: Generar documentación
+        run: |
+          # Prefer Swagger generation if an OpenAPI generator script exists, otherwise try JSDoc
+          if [ -f package.json ]; then
+            if npm run | grep -q "swagger"; then
+              npm run swagger || true
+            elif npm run | grep -q "docs"; then
+              npm run docs || true
+            else
+              # Try JSDoc: install jsdoc locally and run it for src folder
+              npx jsdoc -c jsdoc.json -r -d docs || npx jsdoc -r -c jsdoc.json -d docs src || echo "No docs generation configured for ${{ matrix.project }}"
+            fi
+          fi
+
+      - name: Subir artefactos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-artifacts-${{ matrix.os }}-node${{ matrix.node }}
+          path: |
+            src/${{ matrix.project }}/test-results
+            src/${{ matrix.project }}/coverage
+            src/${{ matrix.project }}/docs

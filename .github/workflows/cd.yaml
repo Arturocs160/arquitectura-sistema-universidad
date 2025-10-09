@@ -1,0 +1,90 @@
+name: CD
+
+on:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    name: Construir y publicar imágenes Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comprobar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar login (Docker Hub o GHCR)
+        id: login
+        run: |
+          echo "Preparando autenticación para publicar imágenes..."
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+      - name: Login Docker Hub
+        if: ${{ secrets.DOCKERHUB_USERNAME }}
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Login GHCR
+        if: ${{ !secrets.DOCKERHUB_USERNAME }}
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Establecer prefijo de imagen
+        id: set-prefix
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          if [ -n "$DOCKERHUB_USERNAME" ]; then
+            echo "IMAGE_PREFIX=docker.io/$DOCKERHUB_USERNAME" >> $GITHUB_ENV
+          else
+            echo "IMAGE_PREFIX=ghcr.io/${{ github.repository_owner }}" >> $GITHUB_ENV
+          fi
+
+      - name: Construir y publicar auth-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/auth-service
+          file: ./src/auth-service/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/auth-service:latest
+            ${{ env.IMAGE_PREFIX }}/auth-service:${{ github.sha }}
+
+      - name: Construir y publicar api-gateway
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/api-gateway
+          file: ./src/api-gateway/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/api-gateway:latest
+            ${{ env.IMAGE_PREFIX }}/api-gateway:${{ github.sha }}
+
+      - name: Construir y publicar documents-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/documents-service
+          file: ./src/documents-service/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/documents-service:latest
+            ${{ env.IMAGE_PREFIX }}/documents-service:${{ github.sha }}
+
+      - name: Subir artefactos de imagen (metadatos)
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-tags
+          path: |
+            # Generamos un pequeño archivo con los tags usados
+            ./
+        if-no-files-found: ignore
