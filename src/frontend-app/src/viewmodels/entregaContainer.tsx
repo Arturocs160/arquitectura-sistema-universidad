@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { factoryMethod } from "../services/factoryMethod";
 
 export default function entregaContainer(Component: any) {
-  return function entregaDecorate(props: any) {
+  return function EntregaDecorate(props: any) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [message, setMessage] = useState("");
 
@@ -23,7 +23,7 @@ export default function entregaContainer(Component: any) {
       try {
         const factory = factoryMethod("upload");
         const response = await factory.post(
-          "http://localhost:3000/upload",
+          "upload",
           formData,
           {
             headers: {

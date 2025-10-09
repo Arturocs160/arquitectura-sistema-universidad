@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { factoryMethod } from "../services/factoryMethod";
-import { useAuth } from "../context/authContext";
+import { UseAuth } from "../context/authContext";
 import { userModel } from "../model/userModel";
 
 export default function inicioContainer(Component: any) {
-  return function inicioDecorate(props: any) {
+  return function InicioDecorate(props: any) {
     const [error, setError] = useState("");
+    const { login } = UseAuth();
 
     const handleLogin = async (user: userModel) => {
       setError("");
 
       try {
         const factory = factoryMethod("auth");
-        const { login } = useAuth();
-        const response = await factory.post("/login", {
-          user,
-        });
+        const response = await factory.post("login", user);
         login({ user });
 
         const { result } = response.data;

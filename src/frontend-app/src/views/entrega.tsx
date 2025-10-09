@@ -1,6 +1,7 @@
-import "./styles.css";
+import "../components/styles.css";
+import entregaContainer from "../viewmodels/entregaContainer";
 
-export default function Entrega({
+function Entrega({
   handleFileChange,
   handleUpload,
   message,
@@ -25,3 +26,5 @@ export default function Entrega({
     </div>
   );
 }
+
+export default entregaContainer(Entrega);

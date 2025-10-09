@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import registroContainer from "../viewmodels/registroContainer";
 
-export default function Registro({
+function Registro({
   handleRegister,
 
   error,
@@ -57,3 +58,5 @@ export default function Registro({
     </div>
   );
 }
+
+export default registroContainer(Registro);

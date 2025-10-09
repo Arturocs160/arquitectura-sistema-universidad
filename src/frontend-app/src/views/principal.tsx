@@ -1,4 +1,4 @@
-import "./styles.css";
+import "../components/styles.css";
 import img1 from "../assets/img/img1.png";
 export default function Principal() {
   return (

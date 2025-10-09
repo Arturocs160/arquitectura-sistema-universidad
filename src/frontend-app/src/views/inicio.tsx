@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import inicioContainer from "../viewmodels/inicioContainer";
 
-export default function Inicio({ handleLogin, error }: any) {
+function Inicio({ handleLogin, error }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -50,3 +51,6 @@ export default function Inicio({ handleLogin, error }: any) {
     </div>
   );
 }
+
+
+export default inicioContainer(Inicio);

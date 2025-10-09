@@ -50,13 +50,13 @@ export const factoryMethod = (type: "auth" | "upload"): AxiosInstance => {
   switch (type) {
     case "auth":
       instance = axios.create({
-        baseURL: "http://localhost:3000",
+        baseURL: "http://localhost/auth/",
       });
       break;
 
     case "upload":
       instance = axios.create({
-        baseURL: "http://localhost:3000/upload",
+        baseURL: "http://localhost/documents/",
         headers: { "Content-Type": "multipart/form-data" },
       });
       break;

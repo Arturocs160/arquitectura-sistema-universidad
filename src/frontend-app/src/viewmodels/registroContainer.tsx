@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { userModel } from "../model/userModel";
 
 export default function registroContainer(Component: any) {
-  return function registroDecorate(props: any) {
+  return function RegistroDecorate(props: any) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
@@ -14,9 +14,7 @@ export default function registroContainer(Component: any) {
 
       try {
         const factory = factoryMethod("auth");
-        const response = await factory.post("/create-user", {
-          user,
-        });
+        const response = await factory.post("create-user", user);
 
         setSuccess(response.data.message || "Registro exitoso");
       } catch (error: any) {
