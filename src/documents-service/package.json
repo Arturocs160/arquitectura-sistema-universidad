@@ -1,20 +1,33 @@
 {
   "type": "module",
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.37.0",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^1.4.13",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "eslint": "^9.37.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "dev": "node --loader ts-node/esm index.ts"
+    "dev": "node --loader ts-node/esm index.ts",
+    "lint": "eslint \"src/**/*.{ts,tsx,js}\" --ext .ts,.tsx,.js",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx,js}\" --ext .ts,.tsx,.js --fix"
   }
 }
