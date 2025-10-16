@@ -1,11 +1,9 @@
 #  Investigación y Aplicación de Patrones de Diseño + CI/CD
-**
-Universidad Tecnológica de Tehuacán
+**Universidad Tecnológica de Tehuacán
 Arquitectura de Software
 José Miguel Carrera Pacheco
 Angel Romero Barragán
-08/10/2025
-**
+08/10/2025**
 
 El objetivo principal de los patrones es facilitar la reutilización de diseños y arquitecturas software que han tenido éxito capturando la experiencia y haciéndola accesible a los no expertos.
 **1.	Patrones de Diseño GoF**
@@ -16,8 +14,7 @@ Dentro de los patrones clásicos tenemos los GoF (Gang of Four),estudiados por E
 · Patrones de comportamiento tratan de las interacciones dinámicas entre sociedades de clases y objetos
 Y dentro de cada grupo tenemos:
 
-**1.	Patrones de creación
-**
+**1.	Patrones de creación**
 •	Abstract Factory. Proporciona una interfaz para crear familias de objetos o que dependen entre sí, sin especificar sus clases concretas.
 
 •	Builder. Separa la construcción de un objeto complejo de su representación, de forma que el mismo proceso de construcción pueda crear diferentes representaciones.
@@ -29,8 +26,7 @@ Y dentro de cada grupo tenemos:
 
 •	Singleton. Garantiza que una clase sólo tenga una instancia, y proporciona un punto de acceso global a ella.
 
-**2.	Patrones estructurales
-**
+**2.	Patrones estructurales**
 •	Adapter. Convierte la interfaz de una clase en otra distinta que es la que esperan los clientes. Permiten que cooperen clases que de otra manera no podrían por tener interfaces incompatibles.
 
 •	Bridge. Desvincula una abstracción de su implementación, de manera que ambas puedan variar de forma independiente.
@@ -49,8 +45,7 @@ Y dentro de cada grupo tenemos:
 •	Proxy. Proporciona un sustituto o representante de otro objeto para controlar el acceso a éste.
 
 
-**3.	Patrones de comportamiento
-**
+**3.	Patrones de comportamiento**
 •	Chain of Responsibility. Evita acoplar el emisor de una petición a su receptor, al dar a más de un objeto la posibilidad de responder a la petición. Crea una cadena con los objetos receptores y pasa la petición a través de la cadena hasta que esta sea tratada por algún objeto.
 
 •	Command. Encapsula una petición en un objeto, permitiendo así parametrizar a los clientes con distintas peticiones, encolar o llevar un registro de las peticiones y poder deshacer la operaciones.
@@ -109,11 +104,10 @@ Decorator: React / Angular: HOC (High Order Components) o decoradores de clase, 
 
 Mediator: Chat apps (Discord, Slack) o sistemas de mensajería, coordina comunicación entre múltiples objetos sin acoplarlos.
 
-**2.	Patrones emergentes
-**se refieren a patrones de diseño de software modernos y en constante evolución, que se enfocan en soluciones probadas para problemas recurrentes, pero adaptadas a las necesidades actuales de escalabilidad, flexibilidad y desarrollo ágil.
+**2.	Patrones emergentes**
+se refieren a patrones de diseño de software modernos y en constante evolución, que se enfocan en soluciones probadas para problemas recurrentes, pero adaptadas a las necesidades actuales de escalabilidad, flexibilidad y desarrollo ágil.
 
-**patrón MVC.
-**
+**patrón MVC.**
 El patrón MVC (Model–View–Controller) es un patrón de arquitectura de software que separa la lógica de negocio, la interfaz de usuario y el control de flujo en tres componentes principales:
 
 o	Model (Modelo): Representa los datos, la lógica de negocio y las reglas de la aplicación. Gestiona directamente los datos, la lógica y las reglas de la aplicación y es responsable de recuperar los datos de una base de datos, realizar operaciones con ellos y actualizarse o notificar cambios a la Vista cuando los datos cambian.
@@ -164,8 +158,7 @@ Modelo: Alumno, Materia, Inscripción, Pago (clases que gestionan datos y reglas
 Vista: Pantallas donde el alumno se inscribe o visualiza su estado de pago.
 Controlador: Recibe las solicitudes del usuario (“inscribirse”), actualiza el modelo y recarga la vista con el nuevo estado.
 
-**•	patrón DAO (Data Access Object).
-**
+**•	patrón DAO (Data Access Object).**
 Este modelo de diseño busca separar la lógica de negocio de la aplicación de las operaciones relacionadas con la persistencia de datos. En otras palabras, permite centralizar y abstraer las interacciones con una base de datos, proporcionando una interfaz coherente para manipular los datos sin que la aplicación necesite conocer los detalles de la base subyacente.
 
 El DAO se basa en un modelo simple, pero eficaz. El acceso a la base de datos se estandariza a través de una serie de métodos genéricos o específicos. 
@@ -192,7 +185,7 @@ Java (Spring, Hibernate, Jakarta EE): DAO es el patrón estándar para manejar p
 Python: En frameworks como Django o SQLAlchemy (aunque se maneje bajo el ORM).
 Node.js / Express: DAO abstrae consultas SQL o MongoDB.
 
-•	Patron CQRS (Command Query Responsibility Segregation)
+**•	Patron CQRS (Command Query Responsibility Segregation)**
 CQRS (Command Query Responsibility Segregation) significa literalmente Segregación de Responsabilidad entre Comando y Consulta.
 Este patrón divide las operaciones de lectura (Query) y escritura (Command) en dos modelos separados, en lugar de usar una única estructura para ambas cosas (como en un CRUD tradicional).
 Ventajas
@@ -219,8 +212,7 @@ Los comandos registran los cambios (inicio de viaje, actualización de tarifa, f
 Las consultas leen datos agregados (mapas en tiempo real, ubicación de conductores, historial del usuario).
 Esto permite manejar millones de solicitudes simultáneas sin afectar el rendimiento.
 
-**•	Patron DDD (Domain-Driven Design)
-**
+**•	Patron DDD (Domain-Driven Design)**
 Es un patrón arquitectónico y de diseño de software propuesto por Eric Evans en su libro Domain-Driven Design: Tackling Complexity in the Heart of Software” (2003).
 
 Su objetivo principal es construir software que refleje fielmente la lógica del negocio real, centrándose en el dominio del problema, no en la tecnología, en otras palabras debe hablar el mismo lenguaje que usan los expertos del negocio (por ejemplo, los administradores, contadores o académicos de una universidad).
@@ -260,8 +252,7 @@ Desventajas
 Ejemplo de uso en la industria.
 Cada módulo (viajes, conductores, pagos, mapas) es un bounded context independiente. Cada contexto tiene su propio modelo de dominio y servicios, siguiendo el principio DDD.
 
-**•	patrón MVVM (Model–View–ViewModel).
-**
+**•	patrón MVVM (Model–View–ViewModel).**
 El patrón MVVM es un patrón de arquitectura de software que separa la interfaz de usuario (View) de la lógica de negocio y presentación (ViewModel), facilitando el mantenimiento, la reutilización y las pruebas.
 
 Fue creado por Microsoft para WPF (Windows Presentation Foundation), y hoy en día es ampliamente usado en desarrollo web y móvil (Angular, Vue, React con hooks, Flutter, etc.).
@@ -297,8 +288,7 @@ Ejemplos de uso en la industria
 •	Google: Android (Jetpack, LiveData, ViewModel), Separa UI y lógica de negocio en apps móviles.
 •	Flutter / Dart: Flutter Provider, Riverpod, Implementan MVVM para separar lógica de estado y UI.
 
-**•	¿Cuándo conviene aplicarlos?
-**
+**•	¿Cuándo conviene aplicarlos?**
 1.	MVC (Model–View–Controller)
 
 o	Cuando el sistema necesita interacción directa entre usuario y aplicación (UI).
@@ -333,8 +323,7 @@ o	Cuando se necesita separar la lógica de negocio de la interfaz de usuario.
 o	Cuando se requiere actualización automática de la UI al cambiar los datos (reactividad).
 o	Ideal para aplicaciones con formularios, dashboards o flujos dinámicos.
 
-**•	ANTIPATRONES
-**
+**•	ANTIPATRONES**
 1.	God Object (Objeto Dios)
 Qué es:
 Un God Object es una clase o módulo que acumula demasiadas responsabilidades.
@@ -349,8 +338,7 @@ Por qué es dañino:
 
 
 
-**Cómo evitarlo:
-**
+**Cómo evitarlo:**
 •	Aplica el principio de responsabilidad única (SRP): cada clase debe tener una sola razón para cambiar.
 •	Divide el código en capas o módulos especializados (por ejemplo, DAO, servicios, controladores).
 •	Implementa patrones como MVC, MVVM o DDD para separar responsabilidades.
@@ -374,10 +362,8 @@ Cómo evitarlo:
 •	Aplica los principios SOLID y las buenas prácticas de Clean Code.
 
 
-**•	CI/CD (Continuous Integration / Continuous Delivery/Deployment)
-**
-**¿Qué es CI/CD?
-**
+**•	CI/CD (Continuous Integration / Continuous Delivery/Deployment)**
+**¿Qué es CI/CD?**
 El término CI/CD representa una serie de prácticas que automatizan el ciclo de vida del desarrollo de software, desde el momento en que un desarrollador escribe código hasta que llega a producción (¡esa palabra mágica que a veces da miedo!).
 
 En esencia, su propósito es entregar software de calidad de forma continua, segura y predecible, reduciendo el factor “funcionaba en mi máquina” a casi cero.
@@ -391,8 +377,7 @@ CD – Continuous Delivery	Entrega Continua	El código que pasa las pruebas de C
 		
 CD – Continuous Deployment	Despliegue Continuo	Es el nivel máximo de automatización: el código probado y aprobado se despliega automáticamente a producción sin intervención manual (sí, como magia).
 
-**•	Herramientas más usadas.
-**
+**•	Herramientas más usadas.**
 Herramienta	Descripción	Puntos destacados
 GitHub Actions	Integrada en GitHub, ideal para proyectos open source y equipos pequeños o medianos.	Fácil configuración, YAML simple, excelente integración con repositorios.
 GitLab CI/CD	Propia de GitLab, muy potente para pipelines personalizados.	Alta seguridad, escalabilidad y visibilidad de procesos.
@@ -424,8 +409,7 @@ o	Si las pruebas en staging son exitosas, desplegar automáticamente en producci
 •	Calidad constante: La integración de análisis estático, pruebas y validaciones mejora la calidad global del producto.
 •	Menor estrés: Menos miedo a “romper producción” porque todo el pipeline valida el código antes del despliegue.
 
-**•	Ejemplo real de YAML (GitHub Actions)
-**
+**•	Ejemplo real de YAML (GitHub Actions)**
 A continuación un pipeline CI/CD básico para un proyecto Node.js:
 
 name: CI/CD Pipeline
@@ -457,8 +441,7 @@ jobs:
       - name:  Desplegar aplicación
         run: echo "Desplegando a producción..."
 
-**•	Qué hace este YAML:
-**
+**•	Qué hace este YAML:**
 Se ejecuta cada vez que hay un push o pull request a la rama main
 Instala dependencias y ejecuta las pruebas automáticamente.
 Si todo pasa correctamente, realiza el despliegue (en este caso simulado con un mensaje, pero podría ser un npm run deploy, docker push, etc.).
